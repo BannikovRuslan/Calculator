@@ -1,4 +1,4 @@
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import Provide, inject
 
 from backend.sevices.Calculator import Calculator
 from fastapi import Depends, APIRouter
@@ -21,6 +21,7 @@ def calculate_minus(x: float, y: float):
 
 
 @router.put("/random/range")
+@inject
 def random_range(n: int, generator: RandomGenerator = Depends(Provide[Container.generator])):
     random_list = generator.generate(n)
     return {"result:": random_list}
