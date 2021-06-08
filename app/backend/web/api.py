@@ -1,6 +1,9 @@
+from dependency_injector.wiring import Provide
+
 from backend.sevices.Calculator import Calculator
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from backend.containers import Container
+from backend.sevices.RandomGenerator import RandomGenerator
 
 app = FastAPI()
 
@@ -18,10 +21,6 @@ def calculate_minus(x: float, y: float):
 
 
 @app.put("/random/range")
-def random_range(a: int, b: int, n: int):
-    container = Container()
-    parameters = {"a": a, "b": b, "count": n}
-    container.config.from_dict(parameters)
-    data = container.data()
-    random_list = container.generator()
-    return {"a": a, "b": b, "data:": data, "result:": random_list}
+def random_range(n: int, generator: RandomGenerator = Depends(Provide[Container.generator])):
+    random_list = generator.generate(n)
+    return {"result:": random_list}

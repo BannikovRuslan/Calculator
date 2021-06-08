@@ -7,8 +7,8 @@ class RandomGenerator:
         self.a = a
         self.b = b
 
-    def generate(self, count: int) -> List[int]:
-        numbers: list
+    def generate(self, count: int) -> object:
+        numbers = []
         for i in range(count):
             numbers.append(random.randomrange(self.a, self.b - 1))
 
