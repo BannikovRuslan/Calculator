@@ -7,5 +7,5 @@ class Calculator:
         return x + y
 
     @staticmethod
-    def minus(x, y):
+    def minus(x: float, y: float) -> float:
         return x - y

@@ -1,20 +1,18 @@
 from dependency_injector import containers, providers
 
-from backend.sevices.service_calculator import CalculatorService, Operation2params
-from .sevices.Calculator import Calculator
+from backend.sevices.RandomGenerator import RandomGenerator
 
 
 class Container(containers.DeclarativeContainer):
-
     config = providers.Configuration()
 
-    operation = providers.Factory(
-        Operation2params,
-        x=config.x,
-        y=config.y,
+    data = providers.Factory(
+        RandomGenerator,
+        a=config.a,
+        b=config.b,
     )
 
-    calculate = providers.Factory(
-        CalculatorService,
-        operation=operation,
+    generator = providers.Factory(
+        RandomGenerator.generate,
+        count=config.count
     )
