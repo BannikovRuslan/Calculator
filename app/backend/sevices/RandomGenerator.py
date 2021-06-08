@@ -10,6 +10,6 @@ class RandomGenerator:
     def generate(self, count: int) -> object:
         numbers = []
         for i in range(count):
-            numbers.append(random.randomrange(self.a, self.b - 1))
+            numbers.append(random.randrange(self.a, self.b - 1))
 
         return numbers
