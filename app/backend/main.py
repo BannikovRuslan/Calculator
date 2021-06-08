@@ -15,4 +15,4 @@ if __name__ == '__main__':
     app_container.container = container
     app_container.include_router(api.router)
 
-    uvicorn.run(app_container, host="0.0.0.0", port=8000)
+    uvicorn.run(api.router, host="0.0.0.0", port=8000)
