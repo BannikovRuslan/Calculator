@@ -1,15 +1,31 @@
-from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, Text, Date, DateTime
+from dependency_injector import resources
+from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.future import Engine
+from sqlalchemy.orm import relationship, Session
 
-import os
+Base = declarative_base()
 
-if os.path.exists("operations.db"):
-    os.remove("operations.db")
 
-engine = create_engine("sqlite:///operations.db", echo=True)
+class DBResource(resources.Resource):
 
-Base = declarative_base()  # может из другого модуля?
+    def init(self, path: str) -> Engine:
+        engine = create_engine("sqlite:///" + path, echo=True)
+        Base.metadata.create_all(engine)
+        self.addBaseData(engine)
+        return engine
+
+    def addBaseData(self, engine: Engine) -> None:
+        session = Session(bind=engine)
+        operations = [
+            OperationTypes(operationtype='сложение'),
+            OperationTypes(operationtype='вычитание'),
+            OperationTypes(operationtype='генерация случайного числа')
+        ]
+        session.add_all(operations)
+
+    def shutdown(self, engine: Engine) -> None:
+        engine.connect().close()
 
 
 class OperationTypes(Base):
@@ -56,13 +72,10 @@ class OperationsInTime(Base):
     operation_rs = relationship(
         'operationtypes',
         backref='operation_type',
-        lazu='subquery'
+        lazy='subquery'
     )
 
     time = Column(
         DateTime,
         comment='Время выполнения операции / действия'
     )
-
-
-Base.metadata.create_all(engine)

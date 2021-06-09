@@ -1,7 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 
-from backend.containers import Container, CalcContainer
+from backend.containers import Container, CalcContainer, DBContainer
+from backend.db import repository_db
 from backend.web import api
 
 
@@ -14,6 +15,11 @@ if __name__ == '__main__':
 
     calc_container = CalcContainer()
     calc_container.wire(modules=[api])
+
+    db_container = DBContainer()
+    db_params = {"path": "d://operations.db"}
+    db_container.config.from_dict(db_params)
+    db_container.wire(modules=[repository_db])
 
     app_container = FastAPI()
     app_container.include_router(api.router)
