@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from backend.containers import Container
+from backend.containers import Container, CalcContainer
 from backend.web import api
 
 
@@ -11,6 +11,9 @@ if __name__ == '__main__':
     container = Container()
     container.config.from_dict(parameters)
     container.wire(modules=[api])
+
+    calc_container = CalcContainer()
+    calc_container.wire(modules=[api])
 
     app_container = FastAPI()
     app_container.include_router(api.router)
