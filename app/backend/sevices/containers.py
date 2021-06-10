@@ -24,17 +24,3 @@ class CalcContainer(containers.DeclarativeContainer):
     )
 
 
-class DBContainer(containers.DeclarativeContainer):
-
-    config = providers.Configuration(strict=True)
-
-    resource = providers.Resource(
-        DBResource,
-        path=config.path,
-    )
-
-    db_repository = providers.Singleton(
-        DBRepository,
-        session_factory=resource
-    )
-
