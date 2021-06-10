@@ -14,9 +14,9 @@ class DBRepository:
     @inject
     def addSingleData(self, operation: str, engine: DBContainer = Closing(Provide[DBContainer.resource])) -> None:
         session = Session(bind=engine)
-        id_operation_type = self.getOperationTypeID(operation_type=operation)
+        id_operation_type = self.getOperationTypeID(operation_type="'"+operation+"'")
         now = datetime.now()
-        new_operation = OperationsInTime(operation=id_operation_type, time=now)
+        new_operation = OperationsInTime(operation="'"+id_operation_type+"'", time="'"+now+"'")
         session.add(new_operation)
         session.commit()
 
@@ -25,6 +25,6 @@ class DBRepository:
                            operation_type: str,
                            engine: DBContainer = Closing(Provide[DBContainer.resource])) -> int:
         session = Session(bind=engine)
-        query = session.query(OperationTypes.id_operationtypes).filter_by(operationtype="'"+operation_type+"'")
+        query = session.query(OperationTypes.id_operationtype).filter_by(operationtype="'"+operation_type+"'").first()
         return query
 

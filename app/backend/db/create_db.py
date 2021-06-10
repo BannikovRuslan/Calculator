@@ -7,34 +7,13 @@ from sqlalchemy.orm import relationship, Session
 Base = declarative_base()
 
 
-class DBResource(resources.Resource):
-
-    def init(self, path: str) -> Engine:
-        engine = create_engine("sqlite:///" + path, echo=True)
-        Base.metadata.create_all(engine)
-        self.addBaseData(engine)
-        return engine
-
-    def addBaseData(self, engine: Engine) -> None:
-        session = Session(bind=engine)
-        operations = [
-            OperationTypes(operationtype='сложение'),
-            OperationTypes(operationtype='вычитание'),
-            OperationTypes(operationtype='генерация случайного числа')
-        ]
-        session.add_all(operations)
-
-    def shutdown(self, engine: Engine) -> None:
-        engine.connect().close()
-
-
 class OperationTypes(Base):
     __tablename__ = 'operationtypes'
     __tableargs__ = {
         'comment': 'Типы выполняемых операций / действий'
     }
 
-    id_operationtypes = Column(
+    id_operationtype = Column(
         Integer,
         nullable=False,
         unique=True,
@@ -66,16 +45,40 @@ class OperationsInTime(Base):
 
     operation = Column(
         Integer,
-        ForeignKey('operationtypes.id_operationtypes'),
+        ForeignKey('operationtypes.id_operationtype'),
         comment='Тип операции'
-    )
-    operation_rs = relationship(
-        'operationtypes',
-        backref='operation_type',
-        lazy='subquery'
     )
 
     time = Column(
         DateTime,
         comment='Время выполнения операции / действия'
     )
+
+    operationtypes = relationship(
+        'OperationTypes',
+        backref='operation_type',
+        lazy='subquery'
+    )
+
+
+class DBResource(resources.Resource):
+
+    def init(self, path: str):
+        engine = create_engine("sqlite:///" + path, echo=True)
+        Base.metadata.create_all(engine)
+        self.addBaseData(engine)
+        return engine
+
+    def addBaseData(self, engine: Engine) -> None:
+        session = Session(bind=engine)
+        operations = [
+            OperationTypes(operationtype='сложение'),
+            OperationTypes(operationtype='вычитание'),
+            OperationTypes(operationtype='генерация случайного числа')
+        ]
+        session.add_all(operations)
+
+    def shutdown(self, engine: Engine) -> None:
+        pass
+
+
