@@ -1,6 +1,7 @@
 from dependency_injector import containers, providers
 
-from backend.db.create_db import DBResource
+from backend.db.repository_db import DBRepository
+from backend.db.resource_db import DBResource
 from backend.sevices.Calculator import Calculator
 from backend.sevices.RandomGenerator import RandomGenerator
 
@@ -30,8 +31,4 @@ class DBContainer(containers.DeclarativeContainer):
     resource = providers.Resource(
         DBResource,
         path=config.path,
-    )
-
-    session = providers.Factory(
-
     )

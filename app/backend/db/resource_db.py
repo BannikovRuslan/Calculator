@@ -2,7 +2,7 @@ from dependency_injector import resources
 from sqlalchemy import create_engine, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import Engine
-from sqlalchemy.orm import relationship, Session
+from sqlalchemy.orm import relationship, Session, sessionmaker
 
 Base = declarative_base()
 
@@ -66,18 +66,8 @@ class DBResource(resources.Resource):
     def init(self, path: str):
         engine = create_engine("sqlite:///" + path, echo=True)
         Base.metadata.create_all(engine)
-        self.addBaseData(engine)
-        return engine
-
-    def addBaseData(self, engine: Engine) -> None:
-        session = Session(bind=engine)
-        operations = [
-            OperationTypes(operationtype='сложение'),
-            OperationTypes(operationtype='вычитание'),
-            OperationTypes(operationtype='генерация случайного числа')
-        ]
-        session.add_all(operations)
-        session.commit()
+        session_factory = sessionmaker(bind=engine)
+        return session_factory
 
     def shutdown(self, engine: Engine) -> None:
         pass

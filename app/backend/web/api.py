@@ -3,7 +3,7 @@ from dependency_injector.wiring import Provide, inject
 from backend.db.repository_db import DBRepository
 from backend.sevices.Calculator import Calculator
 from fastapi import Depends, APIRouter
-from backend.containers import Container, CalcContainer
+from backend.containers import Container, CalcContainer, DBContainer
 from backend.sevices.RandomGenerator import RandomGenerator
 
 router = APIRouter()
@@ -11,9 +11,10 @@ router = APIRouter()
 
 @router.put("/calculate/plus")
 @inject
-def calculate_plus(x: float, y: float, calculator: Calculator = Depends(Provide[CalcContainer.calculator])):
-    repo = DBRepository()
-    repo.addSingleData(operation="сложение")
+def calculate_plus(x: float, y: float,
+                   calculator: Calculator = Depends(Provide[CalcContainer.calculator]),
+                   session: DBRepository = Depends(Provide[DBContainer.resource])):
+    DBRepository(session).addSingleData(operation="сложение")
     return {"x": x, "y": y, "result:": calculator.plus(x, y)}
 
 

@@ -1,31 +1,24 @@
 from datetime import datetime
-
-from dependency_injector.wiring import inject, Provide, Closing
-from sqlalchemy.orm import sessionmaker, Session
-
-from backend.containers import DBContainer
-from backend.db.create_db import OperationTypes, OperationsInTime
+from backend.db.resource_db import OperationTypes, OperationsInTime
 
 
 class DBRepository:
 
-    def __init__(self):
-        pass
+    def __init__(self, session_factory):
+        self.session_factory = session_factory
 
-    @inject
-    def addSingleData(self, operation: str, engine: DBContainer = Closing(Provide[DBContainer.resource])) -> None:
-        session = Session(bind=engine)
+    def addOperationType(self, operation_type: str) -> None:
+        self.session_factory.add(OperationTypes(operationtype=operation_type))
+        self.session_factory.commit()
+
+    def addSingleData(self, operation: str) -> None:
         id_operation_type = self.getOperationTypeID(operation_type=operation)
         now = datetime.now()
         new_operation = OperationsInTime(operation=id_operation_type, time=now)
-        session.add(new_operation)
-        session.commit()
+        self.session_factory.add(new_operation)
+        self.session_factory.commit()
 
-    @inject
-    def getOperationTypeID(self,
-                           operation_type: str,
-                           engine: DBContainer = Closing(Provide[DBContainer.resource])) -> int:
-        session = Session(bind=engine)
-        query = session.query(OperationTypes).filter(OperationTypes.operationtype == operation_type).first()
+    def getOperationTypeID(self, operation_type: str) -> int:
+        query = self.session_factory.query(OperationTypes).filter(OperationTypes.operationtype == operation_type).first()
         return query.id_operationtype
 
