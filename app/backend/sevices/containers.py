@@ -1,7 +1,5 @@
 from dependency_injector import containers, providers
 
-from backend.db.repository_db import DBRepository
-from backend.db.resource_db import DBResource
 from backend.sevices.Calculator import Calculator
 from backend.sevices.RandomGenerator import RandomGenerator
 
