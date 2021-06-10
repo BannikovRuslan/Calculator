@@ -77,6 +77,7 @@ class DBResource(resources.Resource):
             OperationTypes(operationtype='генерация случайного числа')
         ]
         session.add_all(operations)
+        session.commit()
 
     def shutdown(self, engine: Engine) -> None:
         pass

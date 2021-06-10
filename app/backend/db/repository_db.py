@@ -9,7 +9,8 @@ from backend.db.create_db import OperationTypes, OperationsInTime
 
 class DBRepository:
 
-    def __init__(self): pass
+    def __init__(self):
+        pass
 
     @inject
     def addSingleData(self, operation: str, engine: DBContainer = Closing(Provide[DBContainer.resource])) -> None:
@@ -25,6 +26,6 @@ class DBRepository:
                            operation_type: str,
                            engine: DBContainer = Closing(Provide[DBContainer.resource])) -> int:
         session = Session(bind=engine)
-        query = session.query(OperationTypes.id_operationtype).filter_by(operationtype="'"+operation_type+"'").first()
+        query = session.query(OperationTypes).filter(OperationTypes.operationtype == operation_type).first()
         return query
 

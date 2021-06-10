@@ -31,3 +31,7 @@ class DBContainer(containers.DeclarativeContainer):
         DBResource,
         path=config.path,
     )
+
+    session = providers.Factory(
+
+    )
