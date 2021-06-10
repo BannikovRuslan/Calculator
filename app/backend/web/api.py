@@ -14,7 +14,7 @@ router = APIRouter()
 def calculate_plus(x: float, y: float,
                    calculator: Calculator = Depends(Provide[CalcContainer.calculator]),
                    db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])):
-    db_repository.addSingleData(operation="сложение")
+    db_repository.add_operation_in_time(operation="сложение")
     return {"x": x, "y": y, "result:": calculator.plus(x, y)}
 
 

@@ -6,20 +6,26 @@ class DBRepository:
 
     def __init__(self, session_factory):
         self.session_factory = session_factory
-        self.session = session_factory()
 
-    def addOperationType(self, operation_type: str) -> None:
-        self.session.add(OperationTypes(operationtype=operation_type))
-        self.session.commit()
+    def add_operation_type(self, operation_type: str) -> None:
+        with self.session_factory() as session:
+            session.add(OperationTypes(operation_type=operation_type))
+            session.commit()
 
-    def addSingleData(self, operation: str) -> None:
-        id_operation_type = self.getOperationTypeID(operation_type=operation)
+    def add_operation_in_time(self, operation: str) -> None:
+        id_operation_type = self.get_operation_type_id(operation_type=operation)
         now = datetime.now()
         new_operation = OperationsInTime(operation=id_operation_type, time=now)
-        self.session.add(new_operation)
-        self.session.commit()
+        with self.session_factory() as session:
+            session.add(new_operation)
+            session.commit()
 
-    def getOperationTypeID(self, operation_type: str) -> int:
-        query = self.session.query(OperationTypes).filter(OperationTypes.operationtype == operation_type).first()
-        return query.id_operationtype
+    def get_operation_type_id(self, operation_type: str) -> int:
+        with self.session_factory() as session:
+            query = session.query(OperationTypes).filter(OperationTypes.operation_type == operation_type).first()
+
+        if query is None
+            return -1
+        else:
+            return query.id_operation_type
 

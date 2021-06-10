@@ -8,19 +8,19 @@ Base = declarative_base()
 
 
 class OperationTypes(Base):
-    __tablename__ = 'operationtypes'
+    __tablename__ = 'operation_types'
     __tableargs__ = {
         'comment': 'Типы выполняемых операций / действий'
     }
 
-    id_operationtype = Column(
+    id_operation_type = Column(
         Integer,
         nullable=False,
         unique=True,
         primary_key=True,
         autoincrement=True
     )
-    operationtype = Column(
+    operation_type = Column(
         String(100),
         comment='Тип операции'
     )
@@ -30,12 +30,12 @@ class OperationTypes(Base):
 
 
 class OperationsInTime(Base):
-    __tablename__ = 'operationsintime'
+    __tablename__ = 'operations_in_time'
     __tableargs__ = {
         'comment': 'Выполненные операции / действия во времени'
     }
 
-    id_operationintime = Column(
+    id_operation_in_time = Column(
         Integer,
         nullable=False,
         unique=True,
@@ -45,7 +45,7 @@ class OperationsInTime(Base):
 
     operation = Column(
         Integer,
-        ForeignKey('operationtypes.id_operationtype'),
+        ForeignKey('operation_types.id_operation_type'),
         comment='Тип операции'
     )
 
@@ -54,9 +54,9 @@ class OperationsInTime(Base):
         comment='Время выполнения операции / действия'
     )
 
-    operationtypes = relationship(
+    operation_types = relationship(
         'OperationTypes',
-        backref='operation_type',
+        backref='time_type',
         lazy='subquery'
     )
 
