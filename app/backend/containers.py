@@ -32,3 +32,9 @@ class DBContainer(containers.DeclarativeContainer):
         DBResource,
         path=config.path,
     )
+
+    db_repository = providers.Singleton(
+        DBRepository,
+        session_factory=resource
+    )
+
