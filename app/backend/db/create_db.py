@@ -26,7 +26,7 @@ class OperationTypes(Base):
     )
 
     def __repr__(self):
-        return f'{self.id_operationtypes} {self.operationtype}'
+        return f'{self.id_operationtype} {self.operationtype}'
 
 
 class OperationsInTime(Base):
