@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from dependency_injector.wiring import Provide, inject
 
 from backend.sevices.Calculator import Calculator
@@ -24,3 +26,8 @@ def calculate_minus(x: float, y: float, calculator: Calculator = Depends(Provide
 @inject
 def random_range(n: int, generator: RandomGenerator = Depends(Provide[Container.generator])):
     return {"x": n, "result:": generator.generate(n)}
+
+
+@router.get("/operations/time_interval")
+def get_operations_time_interval(start: datetime, finish: datetime):
+    return {"start": start, "finish": finish}
