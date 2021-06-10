@@ -24,8 +24,10 @@ class DBRepository:
         with self.session_factory() as session:
             query = session.query(OperationTypes).filter(OperationTypes.operation_type == operation_type).first()
 
-        if query is None
-            return -1
-        else:
-            return query.id_operation_type
+        if query is None:
+            self.add_operation_type(operation_type)
+            with self.session_factory() as session:
+                query = session.query(OperationTypes).filter(OperationTypes.operation_type == operation_type).first()
+
+        return query.id_operation_type
 
