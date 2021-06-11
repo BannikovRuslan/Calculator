@@ -35,4 +35,10 @@ class DBRepository:
             return query.id_operation_type
 
     def operations_time_interval(self, start: datetime, finish: datetime):
-        return None
+        with self.session_factory() as session:
+            query = session.query(OperationsInTime, OperationTypes) \
+                .filter(OperationsInTime.time >= start, OperationsInTime.time <= finish).first()
+        if query is None:
+            return None
+        else:
+            return query

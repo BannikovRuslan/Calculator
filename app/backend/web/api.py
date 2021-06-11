@@ -2,6 +2,8 @@ from datetime import datetime
 
 from dependency_injector.wiring import Provide, inject
 
+from backend.db.containers_db import DBContainer
+from backend.db.repository_db import DBRepository
 from backend.sevices.Calculator import Calculator
 from fastapi import Depends, APIRouter
 from backend.sevices.containers import Container, CalcContainer
@@ -25,9 +27,13 @@ def calculate_minus(x: float, y: float, calculator: Calculator = Depends(Provide
 @router.put("/random/range")
 @inject
 def random_range(n: int, generator: RandomGenerator = Depends(Provide[Container.generator])):
-    return {"x": n, "result:": generator.generate(n)}
+    result = generator.generate(n)
+    return result
 
 
 @router.get("/operations/time_interval")
-def get_operations_time_interval(start: datetime, finish: datetime):
-    return {"start": start, "finish": finish}
+@inject
+def get_operations_time_interval(start: datetime, finish: datetime,
+                                 db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])):
+    result = db_repository.operations_time_interval(start, finish)
+    return result
