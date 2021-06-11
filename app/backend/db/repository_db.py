@@ -1,4 +1,7 @@
 from datetime import datetime
+
+from sqlalchemy.dialects.sqlite import json
+
 from backend.db.resource_db import OperationTypes, OperationsInTime
 
 
@@ -36,8 +39,10 @@ class DBRepository:
 
     def operations_time_interval(self, start: datetime, finish: datetime):
         with self.session_factory() as session:
-            query = session.query(OperationsInTime, OperationTypes) \
-                .filter(OperationsInTime.time >= start, OperationsInTime.time <= finish).first()
+            query = session.query(OperationsInTime.time, OperationTypes.operation_type)\
+                .join(OperationTypes)\
+                .filter(OperationsInTime.time >= start)\
+                .filter(OperationsInTime.time <= finish).all()
         if query is None:
             return None
         else:
