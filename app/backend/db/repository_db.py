@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.sqlite import json
 
 from backend.db.resource_db import OperationTypes, OperationsInTime
+from backend.web.schemas import OperationsInterval
 
 
 class DBRepository:
@@ -37,12 +38,12 @@ class DBRepository:
         else:
             return query.id_operation_type
 
-    def operations_time_interval(self, start: datetime, finish: datetime):
+    def operations_time_interval(self, interval: OperationsInterval):
         with self.session_factory() as session:
             query = session.query(OperationsInTime.time, OperationTypes.operation_type)\
                 .join(OperationTypes)\
-                .filter(OperationsInTime.time >= start)\
-                .filter(OperationsInTime.time <= finish).all()
+                .filter(OperationsInTime.time >= interval.start)\
+                .filter(OperationsInTime.time <= interval.finish).all()
         if query is None:
             return None
         else:

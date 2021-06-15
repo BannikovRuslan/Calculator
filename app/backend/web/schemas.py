@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from pydantic import BaseModel
 
@@ -13,6 +14,16 @@ class RandomInterval(BaseModel):
     b: int
 
 
-class OperationsData(BaseModel):
+class OperationData(BaseModel):
     data: datetime
     operation: str
+
+
+class OperationsInterval(BaseModel):
+    start: datetime
+    finish: datetime
+
+
+class OperationsData(BaseModel):
+    interval: OperationsInterval
+    operations: List[OperationData]

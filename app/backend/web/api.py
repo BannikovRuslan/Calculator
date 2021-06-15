@@ -5,10 +5,10 @@ from dependency_injector.wiring import Provide, inject
 from backend.db.containers_db import DBContainer
 from backend.db.repository_db import DBRepository
 from backend.sevices.Calculator import Calculator
-from fastapi import Depends, APIRouter, Body
+from fastapi import Depends, APIRouter, Body, Query
 from backend.sevices.containers import Container, CalcContainer
 from backend.sevices.RandomGenerator import RandomGenerator
-from backend.web.schemas import CalculatorData, RandomInterval
+from backend.web.schemas import CalculatorData, RandomInterval, OperationsData, OperationsInterval
 
 router = APIRouter()
 
@@ -39,7 +39,7 @@ def random_range(interval: RandomInterval = Body(..., embed=True), n: int = Body
 
 @router.get("/operations/time_interval")
 @inject
-def get_operations_time_interval(start: datetime, finish: datetime,
+def get_operations_time_interval(data: OperationsData,
                                  db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])):
-    result = db_repository.operations_time_interval(start, finish)
-    return result
+    result = db_repository.operations_time_interval(data.interval)
+    return OperationsData(**result.dict())
