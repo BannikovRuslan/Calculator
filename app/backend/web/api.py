@@ -30,8 +30,8 @@ def calculate_minus(data: CalculatorData, calculator: Calculator = Depends(Provi
 def random_range(interval: RandomInterval = Body(..., embed=True), n: int = Body(...),
                  generator: RandomGenerator = Depends(Provide[Container.generator])):
 
-    container = Container()
-    container.config.from_dict(interval)
+    generator.a = interval.a
+    generator.b = interval.b
 
     result = generator.generate(n)
     return result
