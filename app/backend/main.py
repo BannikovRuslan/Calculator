@@ -7,10 +7,10 @@ from backend.sevices import Calculator
 from backend.web import api
 
 if __name__ == '__main__':
-    parameters = {"a": -10, "b": 10}
+    default_parameters = {"a": -10, "b": 10}
 
     container = Container()
-    container.config.from_dict(parameters)
+    container.config.from_dict(default_parameters)
     container.wire(modules=[api])
 
     calc_container = CalcContainer()

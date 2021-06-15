@@ -5,28 +5,34 @@ from dependency_injector.wiring import Provide, inject
 from backend.db.containers_db import DBContainer
 from backend.db.repository_db import DBRepository
 from backend.sevices.Calculator import Calculator
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Body
 from backend.sevices.containers import Container, CalcContainer
 from backend.sevices.RandomGenerator import RandomGenerator
+from backend.web.schemas import CalculatorData, RandomInterval
 
 router = APIRouter()
 
 
 @router.put("/calculate/plus")
 @inject
-def calculate_plus(x: float, y: float, calculator: Calculator = Depends(Provide[CalcContainer.calculator])):
-    return {"x": x, "y": y, "result:": calculator.plus(x, y)}
+def calculate_plus(data: CalculatorData = Body(..., embed=True), calculator: Calculator = Depends(Provide[CalcContainer.calculator])):
+    return {"data": data, "result:": calculator.plus(data)}
 
 
 @router.put("/calculator/minus")
 @inject
-def calculate_minus(x: float, y: float, calculator: Calculator = Depends(Provide[CalcContainer.calculator])):
-    return {"x": x, "y": y, "result:": calculator.minus(x, y)}
+def calculate_minus(data: CalculatorData, calculator: Calculator = Depends(Provide[CalcContainer.calculator])):
+    return {"data": data, "result:": calculator.minus(data)}
 
 
 @router.put("/random/range")
 @inject
-def random_range(n: int, generator: RandomGenerator = Depends(Provide[Container.generator])):
+def random_range(interval: RandomInterval = Body(..., embed=True), n: int = Body(...),
+                 generator: RandomGenerator = Depends(Provide[Container.generator])):
+
+    container = Container()
+    container.config.from_dict(interval)
+
     result = generator.generate(n)
     return result
 
