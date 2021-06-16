@@ -25,5 +25,4 @@ class OperationsInterval(BaseModel):
 
 
 class OperationsData(BaseModel):
-    interval: OperationsInterval
     operations: List[OperationData]

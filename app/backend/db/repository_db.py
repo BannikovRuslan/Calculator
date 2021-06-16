@@ -38,7 +38,7 @@ class DBRepository:
         else:
             return query.id_operation_type
 
-    def operations_time_interval(self, interval: OperationsInterval):
+    def operations_time_interval(self, start: datetime, finish: datetime):
         with self.session_factory() as session:
             query = session.query(OperationsInTime.time, OperationTypes.operation_type)\
                 .join(OperationTypes)\

@@ -16,9 +16,10 @@ class Container(containers.DeclarativeContainer):
 
 class CalcContainer(containers.DeclarativeContainer):
     config = providers.Configuration(strict=True)
-
+    db_repository = providers.Dependency()
     calculator = providers.Factory(
         Calculator,
+        db_repository=db_repository
     )
 
 

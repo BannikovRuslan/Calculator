@@ -13,13 +13,13 @@ if __name__ == '__main__':
     container.config.from_dict(default_parameters)
     container.wire(modules=[api])
 
-    calc_container = CalcContainer()
-    calc_container.wire(modules=[api])
-
     db_container = DBContainer()
     db_params = {"path": "d://operations.db"}
     db_container.config.from_dict(db_params)
     db_container.wire(modules=[api, Calculator])
+
+    calc_container = CalcContainer(db_repository=db_container.db_repository)
+    calc_container.wire(modules=[api])
 
     app_container = FastAPI()
     app_container.include_router(api.router)

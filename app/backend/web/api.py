@@ -39,7 +39,7 @@ def random_range(interval: RandomInterval = Body(..., embed=True), n: int = Body
 
 @router.get("/operations/time_interval")
 @inject
-def get_operations_time_interval(data: OperationsData,
+def get_operations_time_interval(start: datetime, finish: datetime,
                                  db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])):
-    result1 = db_repository.operations_time_interval(data.interval)
-    return OperationsData(**result1.dict())
+    result = db_repository.operations_time_interval(start, finish)
+    return OperationsData(**result.dict())

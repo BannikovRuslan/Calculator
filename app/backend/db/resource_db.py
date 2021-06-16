@@ -57,7 +57,7 @@ class OperationsInTime(Base):
     operation_types = relationship(
         'OperationTypes',
         backref='time_type',
-        lazy='subquery'
+        lazy='subquery',
     )
 
 

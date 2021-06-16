@@ -11,20 +11,17 @@ from backend.web.schemas import CalculatorData
 
 class Calculator:
 
-    def __init__(self): pass
+    def __init__(self, db_repository: DBRepository):
+        self.db_repository = db_repository
 
-    @staticmethod
-    @inject
-    def plus(data: CalculatorData, db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])) -> float:
+    def plus(self, data: CalculatorData) -> float:
         s = data.x + data.y
         time = datetime.now()
-        db_repository.add_operation_in_time(operation="сложение", operation_time=time)
+        self.db_repository.add_operation_in_time(operation="сложение", operation_time=time)
         return s
 
-    @staticmethod
-    @inject
-    def minus(data: CalculatorData, db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])) -> float:
+    def minus(self, data: CalculatorData) -> float:
         d = data.x - data.y
         time = datetime.now()
-        db_repository.add_operation_in_time(operation="вычитание", operation_time=time)
+        self.db_repository.add_operation_in_time(operation="вычитание", operation_time=time)
         return d
