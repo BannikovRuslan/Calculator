@@ -41,5 +41,5 @@ def random_range(interval: RandomInterval = Body(..., embed=True), n: int = Body
 @inject
 def get_operations_time_interval(data: OperationsData,
                                  db_repository: DBRepository = Depends(Provide[DBContainer.db_repository])):
-    result = db_repository.operations_time_interval(data.interval)
-    return OperationsData(**result.dict())
+    result1 = db_repository.operations_time_interval(data.interval)
+    return OperationsData(**result1.dict())
